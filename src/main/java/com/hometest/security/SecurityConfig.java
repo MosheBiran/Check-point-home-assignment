@@ -1,7 +1,6 @@
 package com.hometest.security;
 
 import com.hometest.controllers.data.User;
-import com.hometest.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-    private CustomUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,8 +33,8 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll() // Allow access to H2 console
-                .antMatchers("/api/admin/**").hasRole(String.valueOf(User.Role.ADMIN))
-                .antMatchers("/api/student/**").hasRole(String.valueOf(User.Role.STUDENT))
+                .antMatchers("/api/admin/**").hasAuthority(User.Role.ADMIN.name())
+                .antMatchers("/api/student/**").hasAuthority(User.Role.STUDENT.name())
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

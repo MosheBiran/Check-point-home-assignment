@@ -7,18 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Collections;
 
 
@@ -35,8 +33,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         final String specialKeyHeader = request.getHeader("Special-Key");
 
-        if (specialKeyHeader != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (specialKeyHeader != null && (SecurityContextHolder.getContext().getAuthentication() == null ||
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals(User.Role.ADMIN.name())))) {
             studentRepository.findBySpecialKey(specialKeyHeader).ifPresent(student -> {
+                System.out.println("Student Authenticated: " + student.getName());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(student, null, Collections.singletonList(new SimpleGrantedAuthority(student.getRole().name())));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             });

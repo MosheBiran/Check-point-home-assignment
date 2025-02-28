@@ -5,9 +5,7 @@ import com.hometest.controllers.data.Student;
 import com.hometest.controllers.data.User;
 import com.hometest.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +20,8 @@ public class StudentController {
     @Autowired
     private IStudentService studentService;
 
-    @PostMapping(value = "/enroll/{courseId}")
-    public ResponseEntity<?> enrollStudent(@PathVariable long courseId) {
+    @PostMapping(value = "/course/{courseId}")
+    public ResponseEntity<?> RegisterCourse(@PathVariable long courseId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user == null || user.getRole() != User.Role.STUDENT) {
             return ResponseEntity.badRequest().body("Invalid user or not a student");
@@ -32,6 +30,15 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping(value = "/course/{courseId}")
+    public ResponseEntity<?> dropCourse(@PathVariable long courseId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user == null || user.getRole() != User.Role.STUDENT) {
+            return ResponseEntity.badRequest().body("Invalid user or not a student");
+        }
+        studentService.dropCourse(user.getId(), courseId);
+        return ResponseEntity.ok().build();
+    }
 
 
     @GetMapping("/course")

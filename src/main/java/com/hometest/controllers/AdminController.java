@@ -7,8 +7,6 @@ import com.hometest.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +26,6 @@ public class AdminController {
      */
     @GetMapping("/student")
     public ResponseEntity<List<Student>> getAllStudent() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authenticated user: " + authentication.getName() + ", Authorities: " + authentication.getAuthorities()); // Add this line
-        // ...
         List<Student> users = studentService.getAllStudent();
         if (users.isEmpty()) {
             return ResponseEntity.noContent().build(); // Returns 204 if no components are found
@@ -79,7 +74,7 @@ public class AdminController {
      * This function is meant for testing to see all the pre-loaded users
      * @return Return a list of all the users entities.
      */
-    @GetMapping("/courses")
+    @GetMapping("/course")
     public ResponseEntity<List<Course>> getAllCourses() {
         List<Course> courses = courseService.getAllCourses();
         if (courses.isEmpty()) {
