@@ -7,45 +7,82 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * CourseService provides business logic for managing Course entities.
+ * It implements the ICourseService interface and interacts with the CourseRepository.
+ */
 @Service
-public class CourseService implements ICourseService{
+public class CourseService implements ICourseService {
 
     @Autowired
     private CourseRepository courseRepository;
 
+    /**
+     * Creates a new course.
+     *
+     * @param course The Course object to be created.
+     * @return The saved Course object.
+     */
     @Override
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }
 
+    /**
+     * Updates an existing course with the provided details.
+     *
+     * @param courseId      The ID of the course to update.
+     * @param courseDetails The Course object containing the updated details.
+     * @return The updated Course object.
+     * @throws RuntimeException if the course is not found.
+     */
     @Override
     public Course updateCourse(Long courseId, Course courseDetails) {
         return courseRepository.findById(courseId).map(course -> {
+            // Update course name if provided
             if (courseDetails.getName() != null) {
                 course.setName(courseDetails.getName());
             }
+            // Update course description if provided
             if (courseDetails.getDescription() != null) {
                 course.setDescription(courseDetails.getDescription());
             }
-            // Update the number of student eligible to sign in to a course Only if the number is greater than zero, And it's not lower than the already assigned student
-            if (courseDetails.getMaxNumberOfStudents() > 0 && course.getNumberOfStudents() < courseDetails.getMaxNumberOfStudents()) {
+            // Update max number of students if provided and valid
+            // Only update if the new max number is greater than zero and not less than the current number of students
+            if (courseDetails.getMaxNumberOfStudents() > 0 && course.getNumberOfStudents() <= courseDetails.getMaxNumberOfStudents()) {
                 course.setMaxNumberOfStudents(courseDetails.getMaxNumberOfStudents());
             }
             return courseRepository.save(course);
         }).orElseThrow(() -> new RuntimeException("Course not found"));
     }
 
+    /**
+     * Deletes a course by its ID.
+     *
+     * @param courseId The ID of the course to delete.
+     */
     @Override
     public void deleteCourse(Long courseId) {
         courseRepository.deleteById(courseId);
     }
 
+    /**
+     * Retrieves all courses.
+     *
+     * @return A list of all Course objects.
+     */
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
+
+    /**
+     * Retrieves a course by its ID.
+     *
+     * @param courseId The ID of the course to retrieve.
+     * @return The Course object with the given ID.
+     * @throws RuntimeException if the course is not found.
+     */
     public Course getCoursesById(Long courseId) {
         return courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
     }
-
-
 }

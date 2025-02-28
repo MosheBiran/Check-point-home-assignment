@@ -1,5 +1,9 @@
-package com.hometest.errorHandling;
+package com.hometest.respondHandling;
 
+import com.hometest.respondHandling.errorMessages.CourseFullException;
+import com.hometest.respondHandling.errorMessages.CourseNotFoundException;
+import com.hometest.respondHandling.errorMessages.StudentAlreadyEnrolledException;
+import com.hometest.respondHandling.errorMessages.StudentNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

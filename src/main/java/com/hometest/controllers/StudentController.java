@@ -3,6 +3,8 @@ package com.hometest.controllers;
 import com.hometest.controllers.data.Course;
 import com.hometest.controllers.data.Student;
 import com.hometest.controllers.data.User;
+import com.hometest.respondHandling.ErrorResponse;
+import com.hometest.respondHandling.SuccessResponse;
 import com.hometest.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,42 +15,86 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * StudentController handles student-specific operations like course registration,
+ * dropping courses, and retrieving enrolled courses.
+ * It provides REST endpoints for students.
+ */
 @RestController
-@RequestMapping("/api/student")
+@RequestMapping("/api/student") // Base path for all student endpoints
 public class StudentController {
 
     @Autowired
     private IStudentService studentService;
 
+    /**
+     * Registers a student for a course.
+     *
+     * @param courseId The ID of the course to register for.
+     * @return ResponseEntity with 200 OK on successful registration, or 400 Bad Request if the user is invalid or not a student.
+     */
     @PostMapping(value = "/course/{courseId}")
     public ResponseEntity<?> RegisterCourse(@PathVariable long courseId) {
+        // Retrieve the authenticated user from the SecurityContextHolder
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Check if the user is valid and is a student
         if (user == null || user.getRole() != User.Role.STUDENT) {
-            return ResponseEntity.badRequest().body("Invalid user or not a student");
+            return ResponseEntity.badRequest().body(new ErrorResponse("Invalid user or not a student"));
         }
-        studentService.enrollStudent(user.getId(), courseId);
-        return ResponseEntity.ok().build();
+
+        try {
+            studentService.enrollStudent(user.getId(), courseId);
+            return ResponseEntity.ok().body(new SuccessResponse("Successfully enrolled in course"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
     }
 
+    /**
+     * Drops a student from a course.
+     *
+     * @param courseId The ID of the course to drop.
+     * @return ResponseEntity with 200 OK on successful drop, or 400 Bad Request if the user is invalid or not a student.
+     */
     @DeleteMapping(value = "/course/{courseId}")
     public ResponseEntity<?> dropCourse(@PathVariable long courseId) {
+        // Retrieve the authenticated user from the SecurityContextHolder
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Check if the user is valid and is a student
         if (user == null || user.getRole() != User.Role.STUDENT) {
-            return ResponseEntity.badRequest().body("Invalid user or not a student");
+            return ResponseEntity.badRequest().body(new ErrorResponse("Invalid user or not a student")); // Return 400 with an error message
         }
-        studentService.dropCourse(user.getId(), courseId);
-        return ResponseEntity.ok().build();
+
+        // Drop the student from the course using the student service
+        try {
+            studentService.dropCourse(user.getId(), courseId);
+            return ResponseEntity.ok().body(new SuccessResponse("Successfully dropped course"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
     }
 
-
+    /**
+     * Retrieves all courses that a student is enrolled in.
+     *
+     * @return ResponseEntity containing a list of enrolled courses (200 OK) or no content (204 No Content) if no courses are found.
+     */
     @GetMapping("/course")
     public ResponseEntity<List<Course>> getUserCourses() {
+        // Retrieve the authenticated user from the SecurityContextHolder
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Student student = studentService.getStudentById(user.getId());
-        Set<Course> courses = student.getCourses();
+
+        // Get the set of courses the student is enrolled in using the student service
+        Set<Course> courses = studentService.getStudentCourse(user.getId());
+
+        // Check if the student is enrolled in any courses
         if (courses.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Returns 204 if no components are found
+            return ResponseEntity.noContent().build(); // Return 204 if no courses are found
         }
-        return ResponseEntity.ok(new ArrayList<>(courses)); // Returns 200 with the list of components
+
+        // Convert the set of courses to a list and return it with 200 OK
+        return ResponseEntity.ok(new ArrayList<>(courses));
     }
 }

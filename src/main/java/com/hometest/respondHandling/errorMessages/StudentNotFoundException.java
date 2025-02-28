@@ -1,4 +1,4 @@
-package com.hometest.errorHandling;
+package com.hometest.respondHandling.errorMessages;
 
 public class StudentNotFoundException extends RuntimeException {
     public StudentNotFoundException(String message) {
