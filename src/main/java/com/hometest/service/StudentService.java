@@ -4,16 +4,13 @@ import com.hometest.controllers.data.*;
 import com.hometest.database.repository.CourseRepository;
 import com.hometest.database.repository.StudentRepository;
 import com.hometest.database.repository.UserRepository;
-import com.hometest.security.JwtUtil;
+import com.hometest.errorHandling.CourseFullException;
+import com.hometest.errorHandling.StudentAlreadyEnrolledException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService implements IStudentService {
@@ -60,15 +57,17 @@ public class StudentService implements IStudentService {
 
         Course course  = courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
-        //TODO - Create a custom exception
+
         if(course.getNumberOfStudents() == course.getMaxNumberOfStudents()){
-            throw new RuntimeException("");
+            throw new CourseFullException(String.format("The course %s Has reached its full capacity",course.getName()));
         }
-        //TODO - Open Max courses per student For changers
+        if(student.isEnrolledCourse(course)){
+            throw new StudentAlreadyEnrolledException("Student is already enrolled to this course");
+        }
         if(student.getNumberOfEnrolledCourse() == 2){
-            throw new RuntimeException("");
+            throw new StudentAlreadyEnrolledException("Student is already enrolled to the max number of courses");
         }
-        course.getEnrolledStudents().add(student);
+        course.addEnrolledStudent(student);
         student.addEnrolledCourse(course);
         courseRepository.save(course);
         studentRepository.save(student);
@@ -82,8 +81,12 @@ public class StudentService implements IStudentService {
         Course course  = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
 
-        student.getCourses().remove(course);
+        student.dropCourse(course);
+        course.removeStudent(student);
+        courseRepository.save(course);
+        studentRepository.save(student);
     }
+
 
     @Override
     public List<Student> getAllStudent() {
@@ -106,12 +109,6 @@ public class StudentService implements IStudentService {
         return studentRepository.findBySpecialKey(specialKey).orElseThrow(() -> new RuntimeException("Student not found: " + specialKey));
     }
 
-    // Helper to fetch the current logged-in user
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        return userRepository.findByName(username).orElseThrow(() -> new RuntimeException("Student not found: " + username));
-    }
 
 
 }

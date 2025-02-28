@@ -1,12 +1,10 @@
 package com.hometest.controllers.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -31,7 +29,7 @@ public class Student extends User {
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     @JsonIgnoreProperties("enrolledStudents") // 🔹 Hide students when serializing courses
-    private Set<Course> courses = new HashSet<>();;
+    private Set<Course> courses = new HashSet<>();
 
 
     public Student(String name, String email) {
@@ -47,8 +45,14 @@ public class Student extends User {
     }
 
 
-    public boolean addEnrolledCourse(Course course) {
-        return !courses.contains(course) && courses.add(course);
+    public void addEnrolledCourse(Course course) {
+         courses.add(course);
+    }
+    public void dropCourse(Course course) {
+         courses.remove(course);
+    }
+    public boolean isEnrolledCourse(Course course) {
+        return courses.contains(course);
     }
 
     @JsonIgnore

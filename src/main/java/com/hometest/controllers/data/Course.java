@@ -1,6 +1,5 @@
 package com.hometest.controllers.data;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,8 +40,11 @@ public class Course implements Serializable {
         return enrolledStudents.size();
     }
 
-    public void addEnrolledStudents(Student student) {
+    public void addEnrolledStudent(Student student) {
          enrolledStudents.add(student);
+    }
+    public void removeStudent(Student student) {
+         enrolledStudents.remove(student);
     }
 
 }
