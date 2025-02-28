@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,11 +25,16 @@ public class Course implements Serializable {
     private String name;
     private String description;
     private int maxNumberOfStudents = 30;
-    private Date startDate;
+    private LocalDate startDate;
 
 
     public Course(String name){
         this.name = name;
+    }
+    public Course(String name, String description, LocalDate date){
+        this.name = name;
+        this.description = description;
+        this.startDate = date;
     }
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)

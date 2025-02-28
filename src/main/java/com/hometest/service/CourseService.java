@@ -1,7 +1,10 @@
 package com.hometest.service;
 
 import com.hometest.controllers.data.Course;
+import com.hometest.controllers.data.Student;
 import com.hometest.database.repository.CourseRepository;
+import com.hometest.respondHandling.errorMessages.CourseNotFoundException;
+import com.hometest.respondHandling.errorMessages.StudentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +87,10 @@ public class CourseService implements ICourseService {
      */
     public Course getCoursesById(Long courseId) {
         return courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
+    }
+
+    public Course getCourseByName(String Name) {
+        return courseRepository.findByName(Name)
+                .orElseThrow(() -> new CourseNotFoundException(Name));
     }
 }
