@@ -3,7 +3,6 @@ package com.hometest.service;
 import com.hometest.controllers.data.*;
 import com.hometest.database.repository.CourseRepository;
 import com.hometest.database.repository.StudentRepository;
-import com.hometest.database.repository.UserRepository;
 import com.hometest.respondHandling.errorMessages.CourseFullException;
 import com.hometest.respondHandling.errorMessages.CourseNotFoundException;
 import com.hometest.respondHandling.errorMessages.StudentAlreadyEnrolledException;
@@ -27,9 +26,6 @@ public class StudentService implements IStudentService {
     private StudentRepository studentRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private CourseRepository courseRepository;
 
     /**
@@ -40,8 +36,6 @@ public class StudentService implements IStudentService {
      */
     @Override
     public Student createStudent(Student student) {
-        // Generate a unique special key for the student
-        student.generateSpecialKey();
         return studentRepository.save(student);
     }
 
@@ -91,7 +85,7 @@ public class StudentService implements IStudentService {
     @Transactional
     public void enrollStudent(Long studentId, Long courseId) {
         // Find the student by ID or throw an exception if not found
-        Student student = (Student) studentRepository.findById(studentId)
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId.toString()));
 
         // Find the course by ID or throw an exception if not found
@@ -133,7 +127,7 @@ public class StudentService implements IStudentService {
     @Override
     public void dropCourse(Long studentId, Long courseId) {
         // Find the student by ID or throw an exception if not found
-        Student student = (Student) studentRepository.findById(studentId)
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId.toString()));
 
         // Find the course by ID or throw an exception if not found
@@ -194,7 +188,7 @@ public class StudentService implements IStudentService {
      */
     public Set<Course> getStudentCourse(Long studentId) {
         // Find the student by ID or throw an exception if not found
-        Student student = (Student) studentRepository.findById(studentId)
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId.toString()));
 
         return student.getCourses();
