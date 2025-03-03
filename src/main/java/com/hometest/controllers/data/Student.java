@@ -15,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 @DiscriminatorValue("STUDENT")
 
 public class Student extends User {
@@ -31,6 +30,9 @@ public class Student extends User {
     @JsonIgnoreProperties("enrolledStudents") // 🔹 Hide students when serializing courses
     private Set<Course> courses = new HashSet<>();
 
+    public Student() {
+        generateSpecialKey();
+    }
 
     public Student(String name, String email) {
         super(name,email);
@@ -38,7 +40,7 @@ public class Student extends User {
     }
 
     @PrePersist
-    public void generateSpecialKey() {
+    private void generateSpecialKey() {
         if (this.specialKey == null) {
             this.specialKey = UUID.randomUUID().toString(); // Generate a random key
         }
