@@ -20,7 +20,7 @@ This is a Java Spring Boot web application for managing student course registrat
 - Maven
 
 - Postman (API Testing) 
-### API documentation is available through the .iml file 
+### API documentation is available through the personal collection that was sent in the mail file 
 - (Through Postman -> Right click On collection -> View documentation)
 ## General Information
 
