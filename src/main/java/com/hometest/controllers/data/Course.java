@@ -1,5 +1,6 @@
 package com.hometest.controllers.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +42,7 @@ public class Course implements Serializable {
     @JsonIgnoreProperties({"courses","specialKey"}) // 🔹 Hide courses when serializing students
     private Set<Student> enrolledStudents = new HashSet<>();
 
-
+    @JsonIgnore
     public int getNumberOfStudents() {
         return enrolledStudents.size();
     }

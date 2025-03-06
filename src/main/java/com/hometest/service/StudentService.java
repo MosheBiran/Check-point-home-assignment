@@ -22,12 +22,14 @@ import java.util.Set;
 @Service
 public class StudentService implements IStudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    private CourseRepository courseRepository;
-
+    public StudentService(StudentRepository studentRepository, CourseRepository courseRepository){
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
+    }
     /**
      * Creates a new student.
      *

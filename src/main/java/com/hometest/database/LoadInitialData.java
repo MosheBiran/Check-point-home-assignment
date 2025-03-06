@@ -3,7 +3,6 @@ package com.hometest.database;
 import com.hometest.controllers.data.Admin;
 import com.hometest.controllers.data.Course;
 import com.hometest.controllers.data.Student;
-import com.hometest.controllers.data.User;
 import com.hometest.database.repository.CourseRepository;
 import com.hometest.database.repository.UserRepository;
 import com.hometest.service.StudentService;
@@ -21,15 +20,18 @@ import java.time.LocalDate;
 @Configuration
 public class LoadInitialData {
     private static final Logger log = LoggerFactory.getLogger(LoadInitialData.class);
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final StudentService studentService;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    public LoadInitialData(StudentService studentService,UserRepository userRepository, CourseRepository courseRepository,PasswordEncoder passwordEncoder) {
+        this.studentService = studentService;
+        this.courseRepository = courseRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
     @Bean("initUsersData")
     InitializingBean initUserData() {
         return () -> {

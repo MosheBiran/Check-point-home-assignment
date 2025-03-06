@@ -27,7 +27,7 @@ public class Student extends User {
             name = "Student_Course",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
-    @JsonIgnoreProperties("enrolledStudents") // 🔹 Hide students when serializing courses
+    @JsonIgnoreProperties("enrolledStudents") // Hide students when serializing courses
     private Set<Course> courses = new HashSet<>();
 
     public Student() {
@@ -46,7 +46,6 @@ public class Student extends User {
         }
     }
 
-
     public void addEnrolledCourse(Course course) {
          courses.add(course);
     }
@@ -56,7 +55,6 @@ public class Student extends User {
     public boolean isEnrolledCourse(Course course) {
         return courses.contains(course);
     }
-
     @JsonIgnore
     public int getNumberOfEnrolledCourse() {
         return courses.size();

@@ -15,12 +15,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
-    @Autowired
-    private StudentService studentService;
+    private final StudentService studentService;
+    private final CourseService courseService;
 
     @Autowired
-    private CourseService courseService;
-
+    public AdminController(StudentService studentService, CourseService courseService){
+        this.courseService = courseService;
+        this.studentService = studentService;
+    }
     //---- Crud Student
 
     /**

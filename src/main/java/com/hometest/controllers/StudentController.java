@@ -1,16 +1,14 @@
 package com.hometest.controllers;
 
 import com.hometest.controllers.data.Course;
-import com.hometest.controllers.data.Student;
 import com.hometest.controllers.data.User;
 import com.hometest.respondHandling.ErrorResponse;
 import com.hometest.respondHandling.SuccessResponse;
-import com.hometest.service.IStudentService;
+import com.hometest.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,9 +22,10 @@ import java.util.Set;
 @RequestMapping("/api/student") // Base path for all student endpoints
 public class StudentController {
 
-    @Autowired
-    private IStudentService studentService;
+    private final StudentService studentService;
 
+    @Autowired
+    public StudentController(StudentService studentService){this.studentService = studentService;}
     /**
      * Registers a student for a course.
      *

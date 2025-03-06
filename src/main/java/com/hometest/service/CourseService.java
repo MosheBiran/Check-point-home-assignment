@@ -17,9 +17,13 @@ import java.util.List;
 @Service
 public class CourseService implements ICourseService {
 
-    @Autowired
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
+    @Autowired
+    public CourseService(CourseRepository courseRepository){
+        this.courseRepository = courseRepository;
+
+    }
     /**
      * Creates a new course.
      *
