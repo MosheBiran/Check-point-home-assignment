@@ -4,6 +4,7 @@ import com.hometest.controllers.data.Admin;
 import com.hometest.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,12 +21,13 @@ import java.util.Collections;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    public CustomUserDetailsService(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
     /**
      * Loads user details by username.
      *
