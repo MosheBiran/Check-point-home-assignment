@@ -7,11 +7,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.*;
+
 
 @Entity
 @AllArgsConstructor
@@ -38,14 +37,8 @@ public abstract class User implements Serializable {
     @Column(unique = true)
     private String email;
 
-
     @Enumerated(EnumType.STRING)
     private Role role = Role.STUDENT; // Admin or RegularUser
-
-
-    public User(Role role) {
-        this.role = role;
-    }
 
     public User(String name,String email) {
         this.name = name;
