@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -203,7 +204,7 @@ public class StudentService implements IStudentService {
      * @return The Student object with the given special key.
      * @throws StudentNotFoundException if the student is not found.
      */
-    public Student findBySpecialKey(String specialKey) {
-        return studentRepository.findBySpecialKey(specialKey).orElseThrow(() -> new StudentNotFoundException(specialKey + " With special key"));
+    public Optional<Student> findBySpecialKey(String specialKey) {
+        return studentRepository.findBySpecialKey(specialKey);
     }
 }
