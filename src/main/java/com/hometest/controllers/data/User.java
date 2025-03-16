@@ -25,7 +25,7 @@ public abstract class User implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Improvement to change instead of long to UUID
     private Long id;
 
     @NotBlank(message = "Name is required")

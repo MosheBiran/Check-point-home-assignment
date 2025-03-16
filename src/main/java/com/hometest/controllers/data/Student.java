@@ -15,13 +15,15 @@ import java.util.Set;
 @Getter
 @Setter
 @DiscriminatorValue("STUDENT")
-
+@Table(name = "student", indexes = {
+        @Index(name = "idx_special_key", columnList = "specialKey")
+}) // ✅ Correct way to define an index
 public class Student extends User {
 
     @Column(unique = true)
     private String specialKey;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "Student_Course",
             joinColumns = @JoinColumn(name = "student_id"),
@@ -30,12 +32,10 @@ public class Student extends User {
     private Set<Course> courses = new HashSet<>();
 
     public Student() {
-        generateSpecialKey();
     }
 
     public Student(String name, String email) {
         super(name,email);
-        generateSpecialKey();
     }
 
     @PrePersist
