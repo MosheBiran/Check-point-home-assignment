@@ -8,11 +8,11 @@ import com.hometest.respondHandling.errorMessages.CourseNotFoundException;
 import com.hometest.respondHandling.errorMessages.StudentAlreadyEnrolledException;
 import com.hometest.respondHandling.errorMessages.StudentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -25,6 +25,8 @@ public class StudentService implements IStudentService {
 
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+    @Value("${student.max.courses}")
+    private int maxCourses;
 
     @Autowired
     public StudentService(StudentRepository studentRepository, CourseRepository courseRepository){
@@ -62,17 +64,19 @@ public class StudentService implements IStudentService {
                 student.setEmail(studentDetails.getEmail());
             }
             return studentRepository.save(student);
-        }).orElseThrow(() -> new RuntimeException("Student not found"));
-    }
+        }).orElseThrow(() -> new StudentNotFoundException(studentId.toString()));    }
 
     /**
      * Deletes a student by their ID.
      *
      * @param studentId The ID of the student to delete.
      */
-    @Override
+    @Override @Transactional
     public void deleteStudent(Long studentId) {
-        studentRepository.deleteById(studentId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotFoundException(studentId.toString()));
+        student.getCourses().forEach(course -> course.removeStudent(student));
+        studentRepository.delete(student);
     }
 
     /**
@@ -106,8 +110,8 @@ public class StudentService implements IStudentService {
         }
 
         // Check if the student has reached the maximum number of enrolled courses
-        if (student.getNumberOfEnrolledCourse() == 2) {
-            throw new StudentAlreadyEnrolledException("Student is already enrolled to the max number of courses");
+        if (student.getNumberOfEnrolledCourse() >= maxCourses) {
+            throw new StudentAlreadyEnrolledException("Student is already enrolled in the maximum number of courses (" + maxCourses + ")");
         }
 
         // Add the student to the course and vice versa
@@ -138,12 +142,13 @@ public class StudentService implements IStudentService {
                 .orElseThrow(() -> new CourseNotFoundException(courseId.toString()));
 
         // Remove the student from the course and vice versa
-        student.dropCourse(course);
-        course.removeStudent(student);
-
-        // Save the updated course and student
-        courseRepository.save(course);
-        studentRepository.save(student);
+        if (student.isEnrolledCourse(course)) {
+            student.dropCourse(course);
+            course.removeStudent(student);
+            // Save the updated course and student
+            courseRepository.save(course);
+            studentRepository.save(student);
+        }
     }
 
     /**
@@ -152,7 +157,7 @@ public class StudentService implements IStudentService {
      * @return A list of all Student objects.
      */
     @Override
-    public List<Student> getAllStudent() {
+    public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
@@ -204,7 +209,8 @@ public class StudentService implements IStudentService {
      * @return The Student object with the given special key.
      * @throws StudentNotFoundException if the student is not found.
      */
-    public Optional<Student> findBySpecialKey(String specialKey) {
-        return studentRepository.findBySpecialKey(specialKey);
+    public Student findBySpecialKey(String specialKey) {
+        return studentRepository.findBySpecialKey(specialKey)
+                .orElseThrow(() -> new StudentNotFoundException("Student with special key " + specialKey + " not found"));
     }
 }

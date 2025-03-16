@@ -4,7 +4,6 @@ import com.hometest.controllers.data.Course;
 import com.hometest.controllers.data.Student;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface IStudentService {
@@ -18,9 +17,9 @@ public interface IStudentService {
     void dropCourse(Long studentId, Long courseId);
 
     //Data Access
-    List<Student> getAllStudent();
+    List<Student> getAllStudents();
     Student getStudentById(Long studentId);
     Student getStudentByName(String studentName);
     Set<Course> getStudentCourse(Long studentId);
-    Optional<Student> findBySpecialKey(String specialKey);
+    Student findBySpecialKey(String specialKey);
 }
