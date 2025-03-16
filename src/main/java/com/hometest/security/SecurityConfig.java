@@ -14,8 +14,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,16 +36,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .antMatchers("/h2-console/**").permitAll() // Allow access to H2 console
                 .antMatchers("/api/admin/**").hasAuthority(User.Role.ADMIN.name())
                 .antMatchers("/api/student/**").hasAuthority(User.Role.STUDENT.name())
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .httpBasic()
+                .httpBasic()//Enables HTTP Basic Authentication.
                 .and()
-                .headers().frameOptions().disable();
+                .headers().frameOptions().disable();//Disables frameOptions to allow H2 console access in browsers.
         return http.build();
     }
 
