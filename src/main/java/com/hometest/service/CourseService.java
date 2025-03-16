@@ -5,6 +5,7 @@ import com.hometest.database.repository.CourseRepository;
 import com.hometest.respondHandling.errorMessages.CourseNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class CourseService implements ICourseService {
                 course.setMaxNumberOfStudents(courseDetails.getMaxNumberOfStudents());
             }
             return courseRepository.save(course);
-        }).orElseThrow(() -> new RuntimeException("Course not found"));
+        }).orElseThrow(() -> new CourseNotFoundException("Course not found: " + courseId.toString()));
     }
 
     /**
@@ -67,8 +68,15 @@ public class CourseService implements ICourseService {
      * @param courseId The ID of the course to delete.
      */
     @Override
+    @Transactional
     public void deleteCourse(Long courseId) {
-        courseRepository.deleteById(courseId);
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException(courseId.toString()));
+
+        // Remove students before deleting
+        course.getEnrolledStudents().forEach(student -> student.dropCourse(course));
+
+        courseRepository.delete(course);
     }
 
     /**
@@ -88,7 +96,7 @@ public class CourseService implements ICourseService {
      * @throws RuntimeException if the course is not found.
      */
     public Course getCoursesById(Long courseId) {
-        return courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
+        return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("Course not found:" + courseId.toString()));
     }
 
     public Course getCourseByName(String Name) {
