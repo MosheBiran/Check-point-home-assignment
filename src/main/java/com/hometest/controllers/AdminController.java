@@ -32,7 +32,7 @@ public class AdminController {
      */
     @GetMapping("/student")
     public ResponseEntity<List<Student>> getAllStudent() {
-        List<Student> users = studentService.getAllStudent();
+        List<Student> users = studentService.getAllStudents();
         if (users.isEmpty()) {
             return ResponseEntity.noContent().build(); // Returns 204 if no components are found
         }

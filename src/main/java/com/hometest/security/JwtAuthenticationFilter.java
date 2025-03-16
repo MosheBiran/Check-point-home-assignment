@@ -1,5 +1,6 @@
 package com.hometest.security;
 
+import com.hometest.controllers.data.Student;
 import com.hometest.controllers.data.User;
 import com.hometest.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (specialKeyHeader != null && (SecurityContextHolder.getContext().getAuthentication() == null ||
                 SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                         .anyMatch(a -> a.getAuthority().equals(User.Role.ADMIN.name())))) {
-            studentService.findBySpecialKey(specialKeyHeader).ifPresent(student -> {
-                System.out.println("Student Authenticated: " + student.getName());
+            Student student = studentService.findBySpecialKey(specialKeyHeader);
+            if(student!=null){
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(student, null, Collections.singletonList(new SimpleGrantedAuthority(student.getRole().name())));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            });
+            }
         }
         filterChain.doFilter(request, response);
     }
