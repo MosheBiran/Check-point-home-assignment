@@ -1,6 +1,6 @@
-package com.hometest.database.repository;
+package com.hometest.repository;
 
-import com.hometest.controllers.data.User;
+import com.hometest.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

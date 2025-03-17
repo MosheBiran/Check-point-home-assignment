@@ -1,4 +1,4 @@
-package com.hometest.controllers.data;
+package com.hometest.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.hometest.service;
 
-import com.hometest.controllers.data.Course;
+import com.hometest.model.Course;
 
 public interface ICourseService {
     Course createCourse(Course course);

@@ -1,10 +1,10 @@
-package com.hometest.database;
+package com.hometest.config;
 
-import com.hometest.controllers.data.Admin;
-import com.hometest.controllers.data.Course;
-import com.hometest.controllers.data.Student;
-import com.hometest.database.repository.CourseRepository;
-import com.hometest.database.repository.UserRepository;
+import com.hometest.model.Admin;
+import com.hometest.model.Course;
+import com.hometest.model.Student;
+import com.hometest.repository.CourseRepository;
+import com.hometest.repository.UserRepository;
 import com.hometest.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

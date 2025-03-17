@@ -1,4 +1,4 @@
-package com.hometest.controllers.data;
+package com.hometest.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

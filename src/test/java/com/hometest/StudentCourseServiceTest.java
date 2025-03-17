@@ -1,7 +1,7 @@
 package com.hometest;
 
-import com.hometest.controllers.data.Course;
-import com.hometest.controllers.data.Student;
+import com.hometest.model.Course;
+import com.hometest.model.Student;
 import com.hometest.respondHandling.errorMessages.CourseFullException;
 import com.hometest.respondHandling.errorMessages.StudentAlreadyEnrolledException;
 import com.hometest.service.CourseService;

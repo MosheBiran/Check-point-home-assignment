@@ -1,6 +1,6 @@
 package com.hometest.security;
 
-import com.hometest.controllers.data.User;
+import com.hometest.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

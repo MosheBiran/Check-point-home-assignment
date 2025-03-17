@@ -1,7 +1,7 @@
 package com.hometest.service;
 
-import com.hometest.controllers.data.Course;
-import com.hometest.database.repository.CourseRepository;
+import com.hometest.model.Course;
+import com.hometest.repository.CourseRepository;
 import com.hometest.respondHandling.errorMessages.CourseNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

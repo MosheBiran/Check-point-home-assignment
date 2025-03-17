@@ -40,7 +40,7 @@ This is a Java Spring Boot web application for managing student course registrat
 
 ## Project Structure
 
-### `com.hometest.database`
+### `com.hometest.config`
 - **LoadInitialData.java** – Loads initial data into the database.
 - **repository/** – Contains repository interfaces for database operations.
 

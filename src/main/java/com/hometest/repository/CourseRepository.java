@@ -1,5 +1,5 @@
-package com.hometest.database.repository;
-import com.hometest.controllers.data.Course;
+package com.hometest.repository;
+import com.hometest.model.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

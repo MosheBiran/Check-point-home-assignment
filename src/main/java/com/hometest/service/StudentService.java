@@ -1,8 +1,9 @@
 package com.hometest.service;
 
-import com.hometest.controllers.data.*;
-import com.hometest.database.repository.CourseRepository;
-import com.hometest.database.repository.StudentRepository;
+import com.hometest.repository.CourseRepository;
+import com.hometest.repository.StudentRepository;
+import com.hometest.model.Course;
+import com.hometest.model.Student;
 import com.hometest.respondHandling.errorMessages.CourseFullException;
 import com.hometest.respondHandling.errorMessages.CourseNotFoundException;
 import com.hometest.respondHandling.errorMessages.StudentAlreadyEnrolledException;

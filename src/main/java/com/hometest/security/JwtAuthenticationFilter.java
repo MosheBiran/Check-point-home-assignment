@@ -1,7 +1,7 @@
 package com.hometest.security;
 
-import com.hometest.controllers.data.Student;
-import com.hometest.controllers.data.User;
+import com.hometest.model.Student;
+import com.hometest.model.User;
 import com.hometest.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

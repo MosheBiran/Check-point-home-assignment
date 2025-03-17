@@ -1,7 +1,7 @@
 package com.hometest.controllers;
 
-import com.hometest.controllers.data.Course;
-import com.hometest.controllers.data.User;
+import com.hometest.model.Course;
+import com.hometest.model.User;
 import com.hometest.respondHandling.ErrorResponse;
 import com.hometest.respondHandling.SuccessResponse;
 import com.hometest.service.StudentService;

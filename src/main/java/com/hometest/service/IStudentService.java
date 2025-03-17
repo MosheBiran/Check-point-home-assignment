@@ -1,7 +1,7 @@
 package com.hometest.service;
 
-import com.hometest.controllers.data.Course;
-import com.hometest.controllers.data.Student;
+import com.hometest.model.Course;
+import com.hometest.model.Student;
 
 import java.util.List;
 import java.util.Set;
