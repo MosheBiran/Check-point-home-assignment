@@ -17,6 +17,10 @@ import javax.validation.constraints.Size;
 @Setter @Getter @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@Table(indexes = {
+        @Index(name = "idx_email", columnList = "email"),
+        @Index(name = "idx_special_key", columnList = "specialKey")
+})
 public abstract class User implements Serializable {
 
     public enum Role {

@@ -15,9 +15,6 @@ import java.util.Set;
 @Getter
 @Setter
 @DiscriminatorValue("STUDENT")
-@Table(name = "student", indexes = {
-        @Index(name = "idx_special_key", columnList = "specialKey")
-}) // ✅ Correct way to define an index
 public class Student extends User {
 
     @Column(unique = true)
